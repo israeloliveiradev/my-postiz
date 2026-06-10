@@ -25,14 +25,16 @@ export class TiktokProvider extends SocialAbstract implements SocialProvider {
   name = 'Tiktok';
   isBetweenSteps = false;
   convertToJPEG = true;
-  scopes = [
-    'video.list',
-    'user.info.basic',
-    'video.publish',
-    'video.upload',
-    'user.info.profile',
-    'user.info.stats',
-  ];
+  scopes = process.env.TIKTOK_SCOPES
+    ? process.env.TIKTOK_SCOPES.split(',')
+    : [
+        'video.list',
+        'user.info.basic',
+        'video.publish',
+        'video.upload',
+        'user.info.profile',
+        'user.info.stats',
+      ];
   override maxConcurrentJob = 300;
   dto = TikTokDto;
   editor = 'normal' as const;
@@ -278,13 +280,18 @@ export class TiktokProvider extends SocialAbstract implements SocialProvider {
       })
     ).json();
 
+    const fields = ['open_id', 'avatar_url', 'display_name', 'union_id'];
+    if (this.scopes.includes('user.info.profile')) {
+      fields.push('username');
+    }
+
     const {
       data: {
         user: { avatar_url, display_name, open_id, username },
       },
     } = await (
       await fetch(
-        'https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,union_id,username',
+        `https://open.tiktokapis.com/v2/user/info/?fields=${fields.join(',')}`,
         {
           method: 'GET',
           headers: {
@@ -357,13 +364,18 @@ export class TiktokProvider extends SocialAbstract implements SocialProvider {
 
     this.checkScopes(this.scopes, scope);
 
+    const fields = ['open_id', 'avatar_url', 'display_name', 'union_id'];
+    if (this.scopes.includes('user.info.profile')) {
+      fields.push('username');
+    }
+
     const {
       data: {
         user: { avatar_url, display_name, open_id, username },
       },
     } = await (
       await fetch(
-        'https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,union_id,username',
+        `https://open.tiktokapis.com/v2/user/info/?fields=${fields.join(',')}`,
         {
           method: 'GET',
           headers: {
