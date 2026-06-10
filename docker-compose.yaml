@@ -261,7 +261,7 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: always
-    command: tunnel run --token eyJhIjoiMGRlMWVhOGZjMWJkZDFkYzk4ODQyMTA0NTdhMTEyY2EiLCJ0IjoiMDgzYTIwNDktOTAwMC00MjNlLWI5NzAtOGM2OWMzMTdjOGFhIiwicyI6Ik1EYzJPR00wTmpFdFlqaG1aUzAwWTJRekxXRTFOVFV0TnpjMk9XSTJObUkxTlRnNSJ9
+    command: tunnel run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     networks:
       - postiz-network
 
